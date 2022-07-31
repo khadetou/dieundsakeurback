@@ -21,9 +21,7 @@ export class OrderService {
     const {
       orderItems,
       shippingAddress,
-
       itemsPrice,
-
       shippingPrice,
       totalPrice,
     } = createOrderDto;
@@ -50,7 +48,8 @@ export class OrderService {
   async getOrderById(id: string): Promise<Order> {
     const order = await this.orderModel
       .findById(id)
-      .populate('user', 'name email');
+      .populate('user', 'firstname lastname email');
+
     if (order) {
       return order;
     } else {

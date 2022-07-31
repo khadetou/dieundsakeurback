@@ -24,8 +24,8 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   //CREATE NEW ORDERS
-  @UseGuards(AuthGuard())
   @Post()
+  @UseGuards(AuthGuard())
   async createOrder(
     @Body() createOrderDto: CreateOrderDto,
     @GetUser() user: User,

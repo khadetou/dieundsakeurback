@@ -15,7 +15,13 @@ export class Order {
       {
         name: { type: String, required: true },
         qty: { type: Number, required: true },
-        image: { type: String, required: true },
+        image: [
+          {
+            public_id: { type: String },
+            url: { type: String },
+            format: { type: String },
+          },
+        ],
         price: { type: Number, required: true },
         product: {
           type: mongoose.Schema.Types.ObjectId,
@@ -28,24 +34,27 @@ export class Order {
   orderItems: {
     name: string;
     qty: number;
-    image: string;
+    image: {
+      public_id: string;
+      url: string;
+      format: string;
+    }[];
     price: number;
     product: Product;
   }[];
-
   @Prop({
     type: {
       address: { type: String, required: true },
-      city: { type: String, required: true },
-      postalCode: { type: String, required: true },
-      country: { type: String, required: true },
+      city: { type: String },
+      phone: { type: String, required: true },
+      region: { type: String, required: true },
     },
   })
   shippingAddress: {
     address: string;
-    city: string;
-    postalCode: string;
-    country: string;
+    city?: string;
+    phone: string;
+    region: string;
   };
 
   @Prop({
@@ -97,7 +106,6 @@ export class Order {
 
   @Prop({
     type: Number,
-    required: true,
   })
   delivereAt: number;
 
