@@ -21,9 +21,9 @@ export class OrderService {
     const {
       orderItems,
       shippingAddress,
-      paymentMethod,
+
       itemsPrice,
-      taxPrice,
+
       shippingPrice,
       totalPrice,
     } = createOrderDto;
@@ -34,9 +34,7 @@ export class OrderService {
         orderItems,
         user: user._id,
         shippingAddress,
-        paymentMethod,
         itemsPrice,
-        taxPrice,
         shippingPrice,
         totalPrice,
       });

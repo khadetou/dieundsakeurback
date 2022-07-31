@@ -19,15 +19,9 @@ export class CreateOrderDto {
   orderItems: OrderItems[];
   @IsNotEmpty()
   shippingAddress: ShippingAddress;
-  @IsString()
-  @IsNotEmpty()
-  paymentMethod: string;
   @IsNumber()
   @IsNotEmpty()
   itemsPrice: number;
-  @IsNumber()
-  @IsNotEmpty()
-  taxPrice: number;
   @IsNumber()
   @IsNotEmpty()
   shippingPrice: number;

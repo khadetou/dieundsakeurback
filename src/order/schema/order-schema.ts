@@ -48,9 +48,6 @@ export class Order {
     country: string;
   };
 
-  @Prop({ type: String, required: true })
-  paymentMethod: string;
-
   @Prop({
     type: {
       _id: { type: String },
@@ -68,13 +65,6 @@ export class Order {
 
   @Prop({ type: Number, required: true, default: 0.0 })
   itemsPrice: number;
-
-  @Prop({
-    type: Number,
-    required: true,
-    default: 0.0,
-  })
-  taxPrice: number;
 
   @Prop({
     type: Number,
