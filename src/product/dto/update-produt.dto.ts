@@ -9,7 +9,7 @@ export class UpdateProductDto {
   // @IsString()
   // @IsNotEmpty()
   @Optional()
-  image?: string;
+  image?: any;
 
   @IsString()
   @IsNotEmpty()

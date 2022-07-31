@@ -22,6 +22,13 @@ import { User } from './schema/user.schema';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  // GET USER
+  @Get('/user')
+  @UseGuards(AuthGuard(), RolesGuard)
+  async getUser(@GetUser() user: User): Promise<User> {
+    return user;
+  }
+
   // GET ALL USERS
   @Get('users')
   @UseGuards(AuthGuard(), RolesGuard)

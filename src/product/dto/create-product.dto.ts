@@ -9,7 +9,7 @@ export class CreateProductDto {
   // @IsString()
   // @IsNotEmpty()
   @Optional()
-  image?: string;
+  image?: any;
 
   @IsString()
   @IsNotEmpty()

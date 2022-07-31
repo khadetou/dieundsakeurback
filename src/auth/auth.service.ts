@@ -78,7 +78,6 @@ export class AuthService {
     try {
       return await user.save();
     } catch (error) {
-      console.log(error);
       if (error.code === 11000) {
         throw new ConflictException('User already exists');
       } else {

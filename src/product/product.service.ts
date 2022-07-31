@@ -61,7 +61,7 @@ export class ProductsService {
       countInStock,
     } = createProductDto;
 
-    let imageLinks: any = [];
+    let imageLinks: any[] = [];
 
     if (image) {
       for (let i = 0; i < image.length; i++) {
@@ -69,9 +69,11 @@ export class ProductsService {
           folder: `Market_senegal/Products/${category}`,
         });
 
-        imageLinks[i].public_id = upload.public_id;
-        imageLinks[i].url = upload.url;
-        imageLinks[i].format = upload.format;
+        imageLinks.push({
+          public_id: upload.public_id,
+          url: upload.url,
+          format: upload.format,
+        });
       }
     }
 
@@ -113,23 +115,28 @@ export class ProductsService {
 
     let product = await this.productModel.findById(id);
 
-    let imageLinks: any = [];
+    let imageLinks: any[] = [];
 
-    if (image) {
+    if (image.length !== 0) {
+      for (let i = 0; product.image.length > i; i++) {
+        await v2.uploader.destroy(product.image[i].public_id);
+      }
+
       for (let i = 0; i < image.length; i++) {
         const upload = await v2.uploader.upload(image[i], {
           folder: `Market_senegal/Products/${category}`,
         });
-
-        imageLinks[i].public_id = upload.public_id;
-        imageLinks[i].url = upload.url;
-        imageLinks[i].format = upload.format;
+        imageLinks.push({
+          public_id: upload.public_id,
+          url: upload.url,
+          format: upload.format,
+        });
       }
     }
 
     if (product) {
       product.name = name || product.name;
-      product.image = imageLinks || product.image;
+      product.image = imageLinks.length !== 0 ? imageLinks : product.image;
       product.brand = brand || brand;
       product.category = category || product.category;
       product.description = description || product.description;
@@ -200,6 +207,9 @@ export class ProductsService {
   async deleteProduct(id: string): Promise<Product> {
     const product = await this.productModel.findById(id);
     if (product) {
+      for (let i = 0; product.image.length > i; i++) {
+        await v2.uploader.destroy(product.image[i].public_id);
+      }
       return await product.remove();
     } else {
       throw new InternalServerErrorException('Product not found');
