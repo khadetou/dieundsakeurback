@@ -44,6 +44,10 @@ export class OrderService {
     }
   }
 
+  // GET MY ORDERS
+  async getMyOrders(user: any): Promise<Order[]> {
+    return await this.orderModel.find({ user: user._id });
+  }
   //GET ORDER BY ID
   async getOrderById(id: string): Promise<Order> {
     const order = await this.orderModel
@@ -58,21 +62,11 @@ export class OrderService {
   }
 
   //UPDATE ORDER TO PAID
-  async updateOrderToPaid(
-    id: string,
-    updatePaymentResultDto: UpdatePaymentResultDto,
-  ): Promise<Order> {
-    const { _id, status, update_time, email_address } = updatePaymentResultDto;
+  async updateOrderToPaid(id: string): Promise<Order> {
     const order = await this.orderModel.findById(id);
     if (order) {
       order.isPaid = true;
       order.paidAt = Date.now();
-      order.paymentResult = {
-        _id,
-        status,
-        update_time,
-        email_address,
-      };
       return await order.save();
     } else {
       throw new InternalServerErrorException('Order not found');
@@ -93,16 +87,17 @@ export class OrderService {
 
   // GET ALL ORDERS BY ADMIN
   async getAllOrders(): Promise<Order[]> {
-    return this.orderModel.find({}).populate('user', 'name email');
+    return this.orderModel
+      .find({})
+      .populate('user', 'firstname lastname email');
   }
 
   //  DELETE PRODUCT ORDERED  BY ADMIN
-  async deleteOrder(id: string): Promise<any> {
+  async deleteOrder(id: string): Promise<Order> {
     const order = await this.orderModel.findById(id);
     try {
       if (order) {
-        await order.remove();
-        return { success: true, message: 'Product deleted successfully' };
+        return await order.remove();
       } else {
         throw new NotFoundException('Product not found');
       }
