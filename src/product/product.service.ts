@@ -164,17 +164,18 @@ export class ProductsService {
 
     if (product) {
       const alreadyReviewed = product.reviews.find(
-        (r) => r.user.toString() === id,
+        (r) => r.user.toString() === user._id.toString(),
       );
+
       if (alreadyReviewed) {
         throw new InternalServerErrorException(
-          'You have already reviewed this product',
+          'Vous avez dèjas donné votre avis sur ce produit !',
         );
       }
 
       product.reviews.push({
         user: user._id,
-        name: 'name',
+        name: user.firstname + ' ' + user.lastname,
         rating: Number(rating),
         comment: comment,
       });

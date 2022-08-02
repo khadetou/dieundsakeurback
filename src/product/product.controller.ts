@@ -46,8 +46,7 @@ export class ProductsController {
 
   //CREATE REVIEWS
   @Post('/:id/reviews')
-  @UseGuards(AuthGuard(), RolesGuard)
-  @Roles(Role.Admin)
+  @UseGuards(AuthGuard())
   async createReviews(
     @Body() createReviewsDto: CreateReviewsDto,
     @Param('id') id: string,
@@ -64,7 +63,6 @@ export class ProductsController {
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
   ): Promise<Product> {
-    console.log(id);
     return this.productsService.updateProduct(updateProductDto, id);
   }
 
