@@ -64,7 +64,7 @@ export class AuthController {
 
   // SIGN IN
   @Post('/signin')
-  signIn(
+  async signIn(
     @Body('email') email: string,
     @Body('password') password: string,
   ): Promise<{ accessToken: string }> {
@@ -73,7 +73,24 @@ export class AuthController {
 
   // SIN UP | REGISTER
   @Post('/signup')
-  signUp(@Body() authCredentialsDto: AuthCredentialsDto): Promise<User> {
+  async signUp(@Body() authCredentialsDto: AuthCredentialsDto): Promise<User> {
     return this.authService.createUser(authCredentialsDto);
+  }
+
+  // FORGOT PASSWORD
+  @Post('/forgot-password')
+  async forgotPassword(
+    @Body('email') email: string,
+  ): Promise<{ message: string }> {
+    return await this.authService.forgotPassword(email);
+  }
+
+  // CONFIRM NEW PASSWORD
+  @Put('/confirm-email/:token')
+  async resePassword(
+    @Body('password') password: string,
+    @Param('token') token: string,
+  ): Promise<User> {
+    return await this.authService.resetPassword(token, password);
   }
 }

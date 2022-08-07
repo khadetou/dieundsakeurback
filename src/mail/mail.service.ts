@@ -6,7 +6,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 export class MailService {
   constructor(private mailService: MailerService) {}
 
-  async sendUserConfirmaation(user: User, token: string) {
+  async sendUserConfirmation(user: User, token: string) {
     const url = `http://localhost:3000/me/confirm-email/${token}`;
     await this.mailService.sendMail({
       to: user.email,

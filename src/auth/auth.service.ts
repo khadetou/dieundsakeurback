@@ -124,7 +124,7 @@ export class AuthService {
       await user.save({ validateBeforeSave: false });
 
       try {
-        await this.mailService.sendUserConfirmaation(user, resetToken);
+        await this.mailService.sendUserConfirmation(user, resetToken);
         return { message: 'Email Sent successfully' };
       } catch (error) {
         throw new InternalServerErrorException(error.message);
