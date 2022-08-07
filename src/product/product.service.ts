@@ -23,7 +23,7 @@ export class ProductsService {
   async getProducts(getProductsFilterDto: GetProductsFilterDto): Promise<any> {
     let { pageSize, pageNumber, keyword, category } = getProductsFilterDto;
 
-    pageSize = 10;
+    pageSize = 8;
     const page = Number(pageNumber) || 1;
 
     keyword = keyword
