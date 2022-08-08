@@ -119,10 +119,10 @@ export class AuthService {
         .createHash('sha256')
         .update(resetToken)
         .digest('hex');
-
+      console.log(resetToken);
       user.resetPasswordExpiration = new Date(Date.now() + 10 * 60 * 1000);
-      await user.save({ validateBeforeSave: false });
 
+      await user.save({ validateBeforeSave: false });
       try {
         await this.mailService.sendUserConfirmation(user, resetToken);
         return { message: 'Email Sent successfully' };
@@ -139,7 +139,6 @@ export class AuthService {
       .createHash('sha256')
       .update(resetToken)
       .digest('hex');
-
     const user = await this.userModel
       .findOne({
         resetPasswordToken,
@@ -148,7 +147,7 @@ export class AuthService {
         },
       })
       .exec();
-
+    console.log(resetToken);
     if (user) {
       if (user.resetPasswordExpiration.getTime() > Date.now()) {
         const salt = await bcrypt.genSalt();
