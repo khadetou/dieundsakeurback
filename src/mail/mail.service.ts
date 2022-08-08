@@ -18,4 +18,23 @@ export class MailService {
       },
     });
   }
+
+  async sendMessage(
+    messages: string,
+    email: string,
+    subject: string,
+    name: string,
+  ) {
+    await this.mailService.sendMail({
+      from: email,
+      to: 'hotcodesagency@gmail.com',
+      subject: subject,
+      template: 'message',
+      context: {
+        messages,
+        email,
+        name,
+      },
+    });
+  }
 }

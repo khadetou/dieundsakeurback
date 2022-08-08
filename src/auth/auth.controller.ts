@@ -93,4 +93,15 @@ export class AuthController {
   async signUp(@Body() authCredentialsDto: AuthCredentialsDto): Promise<User> {
     return this.authService.createUser(authCredentialsDto);
   }
+
+  // SEND MESSAGE
+  @Post('/send-message')
+  async sendMessage(
+    @Body('messages') messages: string,
+    @Body('email') email: string,
+    @Body('subject') subject: string,
+    @Body('name') name: string,
+  ): Promise<any> {
+    return this.authService.sendMessage(messages, email, subject, name);
+  }
 }

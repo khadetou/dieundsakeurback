@@ -119,7 +119,7 @@ export class AuthService {
         .createHash('sha256')
         .update(resetToken)
         .digest('hex');
-      console.log(resetToken);
+
       user.resetPasswordExpiration = new Date(Date.now() + 10 * 60 * 1000);
 
       await user.save({ validateBeforeSave: false });
@@ -147,7 +147,7 @@ export class AuthService {
         },
       })
       .exec();
-    console.log(resetToken);
+
     if (user) {
       if (user.resetPasswordExpiration.getTime() > Date.now()) {
         const salt = await bcrypt.genSalt();
@@ -166,6 +166,21 @@ export class AuthService {
       }
     } else {
       throw new UnauthorizedException('Invalid reset token');
+    }
+  }
+
+  // SEND MESSAGE
+  async sendMessage(
+    messages: string,
+    email: string,
+    subject: string,
+    name: string,
+  ): Promise<any> {
+    try {
+      console.log(messages);
+      await this.mailService.sendMessage(messages, email, subject, name);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   }
 }
