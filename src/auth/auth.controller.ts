@@ -37,6 +37,23 @@ export class AuthController {
     return this.authService.getAllUsers();
   }
 
+  // FORGOT PASSWORD
+  @Post('/forgot-password')
+  async forgotPassword(
+    @Body('email') email: string,
+  ): Promise<{ message: string }> {
+    return await this.authService.forgotPassword(email);
+  }
+
+  // CONFIRM NEW PASSWORD
+  @Put('/confirm-email/:token')
+  async resePassword(
+    @Body('password') password: string,
+    @Param('token') token: string,
+  ): Promise<User> {
+    return await this.authService.resetPassword(token, password);
+  }
+
   // Get user by Id
   @Get('users/:id')
   @UseGuards(AuthGuard(), RolesGuard)
@@ -75,22 +92,5 @@ export class AuthController {
   @Post('/signup')
   async signUp(@Body() authCredentialsDto: AuthCredentialsDto): Promise<User> {
     return this.authService.createUser(authCredentialsDto);
-  }
-
-  // FORGOT PASSWORD
-  @Post('/forgot-password')
-  async forgotPassword(
-    @Body('email') email: string,
-  ): Promise<{ message: string }> {
-    return await this.authService.forgotPassword(email);
-  }
-
-  // CONFIRM NEW PASSWORD
-  @Put('/confirm-email/:token')
-  async resePassword(
-    @Body('password') password: string,
-    @Param('token') token: string,
-  ): Promise<User> {
-    return await this.authService.resetPassword(token, password);
   }
 }
