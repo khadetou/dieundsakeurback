@@ -177,8 +177,7 @@ export class AuthService {
     name: string,
   ): Promise<any> {
     try {
-      console.log(messages);
-      await this.mailService.sendMessage(messages, email, subject, name);
+      return await this.mailService.sendMessage(messages, email, subject, name);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

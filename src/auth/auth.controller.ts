@@ -101,7 +101,7 @@ export class AuthController {
     @Body('email') email: string,
     @Body('subject') subject: string,
     @Body('name') name: string,
-  ): Promise<any> {
+  ): Promise<string> {
     return this.authService.sendMessage(messages, email, subject, name);
   }
 }

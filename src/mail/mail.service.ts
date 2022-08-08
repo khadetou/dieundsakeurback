@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { User } from 'src/auth/schema/user.schema';
 import { MailerService } from '@nestjs-modules/mailer';
 
@@ -25,16 +25,21 @@ export class MailService {
     subject: string,
     name: string,
   ) {
-    await this.mailService.sendMail({
-      from: email,
-      to: 'hotcodesagency@gmail.com',
-      subject: subject,
-      template: 'message',
-      context: {
-        messages,
-        email,
-        name,
-      },
-    });
+    try {
+      const data = await this.mailService.sendMail({
+        from: email,
+        to: 'hotcodesagency@gmail.com',
+        subject: subject,
+        template: 'message',
+        context: {
+          messages,
+          email,
+          name,
+        },
+      });
+      return data;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 }
