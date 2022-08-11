@@ -71,7 +71,7 @@ export class ProductsService {
 
         imageLinks.push({
           public_id: upload.public_id,
-          url: upload.url,
+          url: upload.secure_url,
           format: upload.format,
         });
       }
@@ -126,9 +126,10 @@ export class ProductsService {
         const upload = await v2.uploader.upload(image[i], {
           folder: `Market_senegal/Products/${category}`,
         });
+
         imageLinks.push({
           public_id: upload.public_id,
-          url: upload.url,
+          url: upload.secure_url,
           format: upload.format,
         });
       }
