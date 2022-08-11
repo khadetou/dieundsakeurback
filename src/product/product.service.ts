@@ -90,6 +90,7 @@ export class ProductsService {
     };
 
     let product = new this.productModel(productField);
+
     try {
       return await product.save();
     } catch (error) {
