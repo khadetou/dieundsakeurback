@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class AuthUpdateCredentialsDto {
   @IsNotEmpty()
@@ -13,7 +13,7 @@ export class AuthUpdateCredentialsDto {
   @IsNotEmpty()
   @IsString()
   phone: string;
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   password: string;
 }

@@ -62,10 +62,11 @@ export class AuthController {
     return this.authService.getUserById(id);
   }
 
-  @Put('users/profile')
+  @Put('user/profile')
   @UseGuards(AuthGuard())
   async updateUser(
     @GetUser() user: User,
+
     @Body() authUpdateCredentialsDto: AuthUpdateCredentialsDto,
   ): Promise<User> {
     return this.authService.updateUser(authUpdateCredentialsDto, user);

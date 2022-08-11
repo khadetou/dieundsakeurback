@@ -50,6 +50,7 @@ export class AuthService {
       user.firstname = firstname || user.firstname;
       user.lastname = lastname || user.lastname;
       user.phone = phone || user.phone;
+      user.email = email || user.email;
       try {
         return await user.save();
       } catch (error) {
