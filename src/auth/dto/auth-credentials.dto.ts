@@ -16,7 +16,6 @@ export class AuthCredentialsDto {
 
   @IsString()
   @IsNotEmpty()
-  @IsPhoneNumber()
   phone: string;
 
   @IsString()
