@@ -25,6 +25,15 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
+  // FIND USER AND UPDATE RELATED TO BLOG POSTS
+  async findUserAndUpdate(id: string, post: any): Promise<any> {
+    return this.userModel.findByIdAndUpdate(id, {
+      $addToSet: {
+        posts: post._id,
+      },
+    });
+  }
+
   // GET ALL USER Admin
   async getAllUsers(): Promise<User[]> {
     // get alll users except where user is admin

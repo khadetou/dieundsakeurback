@@ -14,6 +14,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
       useFactory: async (config: ConfigService) => ({
         transport: {
           host: config.get('MAIL_HOST'),
+          port: 587,
+          secure: false,
           auth: {
             type: 'OAuth2',
             user: config.get('MAIL_USER'),
@@ -23,7 +25,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
           },
         },
         defaults: {
-          from: `"No-Replay" <${config.get('MAIL_USER')}>`,
+          from: `"Hotcodes"  <${config.get('MAIL_USER')}>`,
         },
         template: {
           dir: join(__dirname, 'templates'),

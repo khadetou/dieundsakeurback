@@ -7,6 +7,11 @@ import { MailModule } from './mail/mail.module';
 import { ProductModule } from './product/product.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { OrderModule } from './order/order.module';
+import { CategoryModule } from './blog/category/category.module';
+import { PostModule } from './blog/post/post.module';
+import { PropertyModule } from './property/property.module';
+import { AgentModule } from './agent/agent.module';
+import { BookingModule } from './booking/booking.module';
 
 @Module({
   imports: [
@@ -23,9 +28,14 @@ import { OrderModule } from './order/order.module';
     }),
     AuthModule,
     MailModule,
-    ProductModule,
-    CloudinaryModule,
-    OrderModule,
+    CategoryModule,
+    PostModule,
+    PropertyModule,
+    AgentModule,
+    BookingModule,
+    // ProductModule,
+    // CloudinaryModule,
+    // OrderModule,
   ],
 })
 export class AppModule {}

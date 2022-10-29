@@ -18,6 +18,14 @@ export class AuthCredentialsDto {
   @IsNotEmpty()
   phone: string;
 
+  @IsNotEmpty()
+  @IsString()
+  image: string;
+
+  @IsNotEmpty()
+  @IsString()
+  website: string;
+
   @IsString()
   @IsNotEmpty()
   password: string;
