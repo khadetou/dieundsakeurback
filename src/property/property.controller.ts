@@ -13,7 +13,7 @@ import { Property } from './schema/property.schema';
 @Controller('property')
 export class PropertyController {
   constructor(private readonly propertyService: PropertyService) {}
-
+  // GET ALL PROPERTIES
   @Get()
   async getProperty(
     @Query() getPropertyFilterDto: GetPropertyFilterDto,
@@ -21,10 +21,26 @@ export class PropertyController {
     return await this.propertyService.getProperties(getPropertyFilterDto);
   }
 
-  //CREATE PRODUCT
+  // GET ALL PROPERTIES TO SELL
+  @Get('/sell')
+  async getPropertyToSell(
+    @Query() getPropertyFilterDto: GetPropertyFilterDto,
+  ): Promise<Property[]> {
+    return await this.propertyService.getPropertiestoSell(getPropertyFilterDto);
+  }
+
+  // GET ALL PROPERTIES TO RENT
+  @Get('/rent')
+  async getPropertyToRent(
+    @Query() getPropertyFilterDto: GetPropertyFilterDto,
+  ): Promise<Property[]> {
+    return await this.propertyService.getPropertiestoRent(getPropertyFilterDto);
+  }
+
+  //CREATE PROPERTIES
   @Post()
   @UseGuards(AuthGuard(), RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Agency, Role.Owner)
   async createProperty(
     @Body() createPropertyDto: CreatePropertyDto,
     @GetUser() user: User,

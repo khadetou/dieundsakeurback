@@ -39,6 +39,60 @@ export class PropertyService {
 
     return { properties, page, pages: Math.ceil(count / pageSize) };
   }
+  //GET ALL PROPERTIES TO RENT
+  async getPropertiestoRent(
+    getPropertyFilterDto: GetPropertyFilterDto,
+  ): Promise<any> {
+    let { pageSize, pageNumber, keyword, location } = getPropertyFilterDto;
+
+    pageSize = 8;
+    const page = Number(pageNumber) || 1;
+
+    keyword = keyword
+      ? {
+          name: { $regex: keyword, $options: 'i' },
+        }
+      : (keyword = location
+          ? {
+              category: { $regex: location, $options: 'i' },
+            }
+          : {});
+
+    const count = await this.propertyModel.countDocuments({ ...keyword });
+    const properties = await this.propertyModel
+      .find({ ...keyword, status: 'RENT' })
+      .limit(pageSize)
+      .skip(pageSize * (page - 1));
+
+    return { properties, page, pages: Math.ceil(count / pageSize) };
+  }
+  //GET ALL PROPERTIES TO SELL
+  async getPropertiestoSell(
+    getPropertyFilterDto: GetPropertyFilterDto,
+  ): Promise<any> {
+    let { pageSize, pageNumber, keyword, location } = getPropertyFilterDto;
+
+    pageSize = 8;
+    const page = Number(pageNumber) || 1;
+
+    keyword = keyword
+      ? {
+          name: { $regex: keyword, $options: 'i' },
+        }
+      : (keyword = location
+          ? {
+              category: { $regex: location, $options: 'i' },
+            }
+          : {});
+
+    const count = await this.propertyModel.countDocuments({ ...keyword });
+    const properties = await this.propertyModel
+      .find({ ...keyword, status: 'SELL' })
+      .limit(pageSize)
+      .skip(pageSize * (page - 1));
+
+    return { properties, page, pages: Math.ceil(count / pageSize) };
+  }
 
   //CREATE PRODUCT
   async createProperty(

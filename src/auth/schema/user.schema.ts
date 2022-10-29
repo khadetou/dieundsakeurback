@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
 
 export type UserDocument = User & Document;
 
@@ -15,13 +14,6 @@ export class User {
   phone: String;
   @Prop({ required: true, type: String })
   password: string;
-  @Prop({ type: String, default: '' })
-  address: string;
-  @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
-    default: [],
-  })
-  agents?: string[];
   @Prop({
     type: String,
     enum: ['admin', 'user', 'agency', 'owner'],
