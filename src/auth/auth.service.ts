@@ -13,7 +13,7 @@ import * as crypto from 'crypto';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { User, UserDocument } from './schema/user.schema';
 import { JwtPayload } from './jwt-payload.interface';
-import { AuthUpdateCredentialsDto } from './aut-update-user-credentials.dto';
+import { AuthUpdateCredentialsDto } from './dto/aut-update-user-credentials.dto';
 import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
@@ -47,7 +47,7 @@ export class AuthService {
 
   // UPDATE USER
   async updateUser(updateUserDto: AuthUpdateCredentialsDto, me: any) {
-    const { email, firstname, lastname, password, phone } = updateUserDto;
+    const { email, firstname, lastname, password, phone, role } = updateUserDto;
 
     const user = await this.userModel.findById(me._id).exec();
     if (user) {
@@ -60,6 +60,7 @@ export class AuthService {
       user.lastname = lastname || user.lastname;
       user.phone = phone || user.phone;
       user.email = email || user.email;
+      user.roles = role || user.roles;
       try {
         return await user.save();
       } catch (error) {

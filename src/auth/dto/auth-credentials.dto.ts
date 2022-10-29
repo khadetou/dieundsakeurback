@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+} from 'class-validator';
 
 export class AuthCredentialsDto {
   @IsString()
@@ -18,13 +24,9 @@ export class AuthCredentialsDto {
   @IsNotEmpty()
   phone: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   image: string;
-
-  @IsNotEmpty()
-  @IsString()
-  website: string;
 
   @IsString()
   @IsNotEmpty()

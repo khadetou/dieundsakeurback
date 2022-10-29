@@ -17,32 +17,26 @@ export class User {
   password: string;
   @Prop({ type: String, default: '' })
   address: string;
-  @Prop({ type: String })
-  agencyName?: string;
-  @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
-    default: [],
-  })
-  properties?: string[];
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     default: [],
   })
   agents?: string[];
   @Prop({
-    type: [String],
+    type: String,
     enum: ['admin', 'user', 'agency', 'owner'],
-    default: ['user'],
+    default: 'user',
   })
-  roles: string[];
+  roles: string;
   @Prop({
     type: {
       public_id: { type: String },
       url: { type: String },
       format: { type: String },
     },
+    default: {},
   })
-  image: {
+  image?: {
     public_id: string;
     url: string;
     format: string;

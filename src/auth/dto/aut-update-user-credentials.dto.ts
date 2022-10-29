@@ -16,4 +16,7 @@ export class AuthUpdateCredentialsDto {
   @IsOptional()
   @IsString()
   password: string;
+  @IsString()
+  @IsOptional()
+  role: string;
 }
