@@ -73,7 +73,8 @@ export class AuthService {
 
   //CREATE USER | Register
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<User> {
-    const { email, firstname, lastname, password, phone } = authCredentialsDto;
+    const { email, firstname, lastname, password, phone, image } =
+      authCredentialsDto;
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -85,7 +86,7 @@ export class AuthService {
       email,
       password: hashedPassword,
     });
-
+    console.log(user);
     try {
       return await user.save();
     } catch (error) {

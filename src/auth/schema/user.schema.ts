@@ -25,14 +25,19 @@ export class User {
       public_id: { type: String },
       url: { type: String },
       format: { type: String },
+      width: { type: Number },
+      height: { type: Number },
     },
     default: {},
   })
-  image?: {
+  image: {
     public_id: string;
     url: string;
     format: string;
+    width: number;
+    height: number;
   };
+
   @Prop({ type: String })
   resetPasswordToken?: string;
   @Prop({ type: Date })
