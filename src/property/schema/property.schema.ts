@@ -29,6 +29,9 @@ export class Property {
   @Prop({ type: String, required: true })
   address: string;
   @Prop({ type: String, required: true })
+  region: string;
+
+  @Prop({ type: String, required: true })
   location: string;
 
   @Prop({
@@ -37,23 +40,21 @@ export class Property {
         public_id: { type: String },
         url: { type: String },
         format: { type: String },
+        width: { type: Number },
+        height: { type: Number },
       },
     ],
   })
-  @Prop({
-    type: [
-      {
-        public_id: { type: String },
-        url: { type: String },
-        format: { type: String },
-      },
-    ],
-  })
-  image: {
+  images: {
     public_id: string;
     url: string;
     format: string;
+    width: number;
+    height: number;
   }[];
+
+  @Prop({ type: String })
+  video: string;
 
   @Prop({ type: String, required: true })
   type: string;
@@ -69,10 +70,36 @@ export class Property {
   price: number;
 
   @Prop({ type: Number, required: true, default: 0 })
+  rooms: number;
+
+  @Prop({ type: Number, required: true, default: 0 })
   beds: number;
 
   @Prop({ type: Number, required: true, default: 0 })
   baths: number;
+
+  @Prop({ type: Boolean, default: false })
+  emergencyexit: boolean;
+  @Prop({ type: Boolean, default: false })
+  cctv: boolean;
+  @Prop({ type: Boolean, default: false })
+  internet: boolean;
+  @Prop({ type: Boolean, default: false })
+  parking: boolean;
+  @Prop({ type: Boolean, default: false })
+  airconditioning: boolean;
+  @Prop({ type: Boolean, default: false })
+  securityguard: boolean;
+  @Prop({ type: Boolean, default: false })
+  terrace: boolean;
+  @Prop({ type: Boolean, default: false })
+  laundry: boolean;
+  @Prop({ type: Boolean, default: false })
+  elevator: boolean;
+  @Prop({ type: Boolean, default: false })
+  balcony: boolean;
+  @Prop({ type: Boolean, default: false })
+  pool: boolean;
 
   @Prop({ type: String, required: true })
   area: string;
@@ -88,9 +115,6 @@ export class Property {
 
   @Prop({ type: Number, required: true, default: 0 })
   numbReviews: number;
-
-  @Prop({ type: [String], required: true })
-  features: String[];
 
   @Prop({ type: Date, default: Date.now })
   createdAt: Date;

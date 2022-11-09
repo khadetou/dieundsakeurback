@@ -1,5 +1,6 @@
 import { Optional } from '@nestjs/common';
 import {
+  IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -22,12 +23,18 @@ export class CreatePropertyDto {
 
   @IsString()
   @IsNotEmpty()
+  region: string;
+
+  @IsString()
+  @IsNotEmpty()
   location: string;
 
-  // @IsString()
-  // @IsNotEmpty()
   @Optional()
-  image?: any;
+  images: string[];
+
+  @IsString()
+  @Optional()
+  video: string;
 
   @IsString()
   @IsNotEmpty()
@@ -48,8 +55,44 @@ export class CreatePropertyDto {
 
   @IsNumber()
   @IsNotEmpty()
-  baths: number;
+  rooms: number;
 
+  @IsNumber()
+  @IsNotEmpty()
+  baths: number;
+  @IsBoolean()
+  @IsOptional()
+  emergencyexit: boolean;
+  @IsBoolean()
+  @IsOptional()
+  cctv: boolean;
+  @IsBoolean()
+  @IsOptional()
+  internet: boolean;
+  @IsBoolean()
+  @IsOptional()
+  parking: boolean;
+  @IsBoolean()
+  @IsOptional()
+  airconditioning: boolean;
+  @IsBoolean()
+  @IsOptional()
+  securityguard: boolean;
+  @IsBoolean()
+  @IsOptional()
+  terrace: boolean;
+  @IsBoolean()
+  @IsOptional()
+  laundry: boolean;
+  @IsBoolean()
+  @IsOptional()
+  elevator: boolean;
+  @IsBoolean()
+  @IsOptional()
+  balcony: boolean;
+  @IsBoolean()
+  @IsOptional()
+  pool: boolean;
   @IsString()
   @IsNotEmpty()
   description: string;
@@ -58,11 +101,7 @@ export class CreatePropertyDto {
   @IsOptional()
   rating: number;
 
-  @IsNumber()
-  @IsOptional()
-  area: number;
-
   @IsString()
-  @IsNotEmpty()
-  features: string;
+  @IsOptional()
+  area: string;
 }

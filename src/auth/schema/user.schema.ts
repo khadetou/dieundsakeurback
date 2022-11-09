@@ -14,6 +14,10 @@ export class User {
   phone: String;
   @Prop({ required: true, type: String })
   password: string;
+  @Prop({ type: String, default: '' })
+  agencename: string;
+  @Prop({ type: String })
+  description: string;
   @Prop({
     type: String,
     enum: ['admin', 'user', 'agency', 'owner'],

@@ -15,6 +15,7 @@ import { User, UserDocument } from './schema/user.schema';
 import { JwtPayload } from './jwt-payload.interface';
 import { AuthUpdateCredentialsDto } from './dto/aut-update-user-credentials.dto';
 import { MailService } from 'src/mail/mail.service';
+import { v2 } from 'cloudinary';
 
 @Injectable()
 export class AuthService {
@@ -47,9 +48,36 @@ export class AuthService {
 
   // UPDATE USER
   async updateUser(updateUserDto: AuthUpdateCredentialsDto, me: any) {
-    const { email, firstname, lastname, password, phone, role } = updateUserDto;
+    const {
+      email,
+      firstname,
+      lastname,
+      password,
+      phone,
+      role,
+      image,
+      agencename,
+      description,
+    } = updateUserDto;
 
     const user = await this.userModel.findById(me._id).exec();
+    if (image !== '') {
+      if (user.image.public_id) {
+        const image_id = user.image.public_id;
+        await v2.uploader.destroy(image_id);
+      }
+      const result = await v2.uploader.upload(image, {
+        folder: `dieundsakeur/user/${user.id}/profile`,
+      });
+
+      user.image = {
+        public_id: result.public_id,
+        url: result.secure_url,
+        format: result.format,
+        height: result.height,
+        width: result.width,
+      };
+    }
     if (user) {
       if (password) {
         const salt = await bcrypt.genSalt();
@@ -60,7 +88,9 @@ export class AuthService {
       user.lastname = lastname || user.lastname;
       user.phone = phone || user.phone;
       user.email = email || user.email;
-      user.roles = role || user.roles;
+      user.roles = role !== 'admin' ? role || user.roles : 'user';
+      user.agencename = agencename || user.agencename;
+      user.description = description || user.description;
       try {
         return await user.save();
       } catch (error) {
@@ -86,7 +116,7 @@ export class AuthService {
       email,
       password: hashedPassword,
     });
-    console.log(user);
+
     try {
       return await user.save();
     } catch (error) {

@@ -1,42 +1,54 @@
 import { Optional } from '@nestjs/common';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class UpdatePropertyDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   address: string;
 
   @IsString()
-  @IsNotEmpty()
-  location: string;
-
-  // @IsString()
-  // @IsNotEmpty()
-  @Optional()
-  image?: any;
+  @IsOptional()
+  region: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
+  location: string;
+
+  @IsOptional()
+  images: string[];
+
+  @IsString()
+  @IsOptional()
+  video: string;
+
+  @IsString()
+  @IsOptional()
   type: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   status: string;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   price: number;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   category: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   description: string;
 
   @IsNumber()
@@ -49,9 +61,44 @@ export class UpdatePropertyDto {
 
   @IsNumber()
   @IsOptional()
-  area: number;
+  rooms: number;
+
+  emergencyexit: boolean;
+  @IsBoolean()
+  @IsOptional()
+  cctv: boolean;
+  @IsBoolean()
+  @IsOptional()
+  internet: boolean;
+  @IsBoolean()
+  @IsOptional()
+  parking: boolean;
+  @IsBoolean()
+  @IsOptional()
+  airconditioning: boolean;
+  @IsBoolean()
+  @IsOptional()
+  securityguard: boolean;
+  @IsBoolean()
+  @IsOptional()
+  terrace: boolean;
+  @IsBoolean()
+  @IsOptional()
+  laundry: boolean;
+  @IsBoolean()
+  @IsOptional()
+  elevator: boolean;
+  @IsBoolean()
+  @IsOptional()
+  balcony: boolean;
+  @IsBoolean()
+  @IsOptional()
+  pool: boolean;
+  @IsNumber()
+  @IsOptional()
+  baths: number;
 
   @IsString()
-  @IsNotEmpty()
-  features: string;
+  @IsOptional()
+  area: string;
 }
