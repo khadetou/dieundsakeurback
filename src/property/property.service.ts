@@ -351,9 +351,9 @@ export class PropertyService {
 
   //GET PROPERTY BY ID
   async getPropertyById(id: string): Promise<Property> {
-    const product = await this.propertyModel.findById(id);
-    if (product) {
-      return product;
+    const property = await this.propertyModel.findById(id);
+    if (property) {
+      return property;
     } else {
       throw new InternalServerErrorException('Product not found');
     }
@@ -362,7 +362,10 @@ export class PropertyService {
   //DELETE PROPERTY
   async deleteProperty(id: string, user: any): Promise<Property> {
     const property = await this.propertyModel.findById(id);
-    if (property && user._id.toString() === property.user.toString()) {
+    if (
+      (property && user._id.toString() === property.user.toString()) ||
+      user.roles === 'admin'
+    ) {
       for (let i = 0; property.images.length > i; i++) {
         await v2.uploader.destroy(property.images[i].public_id);
       }

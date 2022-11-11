@@ -84,6 +84,7 @@ export class AuthService {
         const hashedPassword = await bcrypt.hash(password, salt);
         user.password = hashedPassword;
       }
+
       user.firstname = firstname || user.firstname;
       user.lastname = lastname || user.lastname;
       user.phone = phone || user.phone;

@@ -1,7 +1,14 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { v2 } from 'cloudinary';
 import { Model } from 'mongoose';
 import { CreateAgentDto } from './dto/create-agent.dto';
+import { CreateReviewsDto } from './dto/create-review.dto';
+import { UpdateAgentDto } from './dto/update-agent.dto';
 import { Agent, AgentDocument } from './schema/agent.schema';
 
 @Injectable()
@@ -16,36 +23,15 @@ export class AgentService {
     return await this.agentModel.find().exec();
   }
 
-  //   // GET USER BY ID Admin
-  //   async getUserById(id: string): Promise<User> {
-  //     return await this.userModel.findById(id).exec();
-  //   }
+  // GET USER BY ID AGENT OR ADMIN
+  async getAgentById(id: string): Promise<Agent> {
+    return await this.agentModel.findById(id).exec();
+  }
 
-  //   // UPDATE USER
-  //   async updateUser(updateUserDto: AuthUpdateCredentialsDto, me: any) {
-  //     const { email, firstname, lastname, password, phone, role } = updateUserDto;
-
-  //     const user = await this.userModel.findById(me._id).exec();
-  //     if (user) {
-  //       if (password) {
-  //         const salt = await bcrypt.genSalt();
-  //         const hashedPassword = await bcrypt.hash(password, salt);
-  //         user.password = hashedPassword;
-  //       }
-  //       user.firstname = firstname || user.firstname;
-  //       user.lastname = lastname || user.lastname;
-  //       user.phone = phone || user.phone;
-  //       user.email = email || user.email;
-  //       user.roles = role || user.roles;
-  //       try {
-  //         return await user.save();
-  //       } catch (error) {
-  //         throw new InternalServerErrorException(error);
-  //       }
-  //     } else {
-  //       throw new UnauthorizedException('User with that id not found');
-  //     }
-  //   }
+  // GET MY AGENTS
+  async getMyAgents(user: any): Promise<Agent[]> {
+    return await this.agentModel.find({ user: user._id }).exec();
+  }
 
   //CREATE AGENT
   async createAgent(createAgentDto: CreateAgentDto, user: any): Promise<Agent> {
@@ -71,7 +57,6 @@ export class AgentService {
       phone,
       email,
       description,
-      image: image && image,
       gender,
       socials: {
         youtube: youtube && youtube,
@@ -82,6 +67,20 @@ export class AgentService {
       },
     });
 
+    if (image !== '') {
+      const result = await v2.uploader.upload(image, {
+        folder: `dieundsakeur/user/${user.id}/profile`,
+      });
+
+      agent.image = {
+        public_id: result.public_id,
+        url: result.secure_url,
+        format: result.format,
+        height: result.height,
+        width: result.width,
+      };
+    }
+
     try {
       return await agent.save();
     } catch (error) {
@@ -89,100 +88,110 @@ export class AgentService {
     }
   }
 
-  //   // DELETE USER Admin
-  //   async deleteUser(id: string): Promise<User> {
-  //     return await this.userModel.findByIdAndDelete(id).exec();
-  //   }
+  // UPDATE USER
+  async updateAgent(updateAgentDto: UpdateAgentDto, id: string, user: any) {
+    const {
+      email,
+      firstname,
+      lastname,
+      description,
+      phone,
+      facebook,
+      gender,
+      image,
+      instagram,
+      linkedin,
+      website,
+    } = updateAgentDto;
 
-  //   //   Login / Sign in
-  //   async signIn(
-  //     email: string,
-  //     password: string,
-  //   ): Promise<{ accessToken: string }> {
-  //     const user = await this.userModel.findOne({ email }).exec();
-  //     if (user && (await bcrypt.compare(password, user.password))) {
-  //       const payload: JwtPayload = { email };
-  //       const accessToken = await this.jwtService.sign(payload);
-  //       return { accessToken };
-  //     } else {
-  //       throw new UnauthorizedException('Invalid Credentials');
-  //     }
-  //   }
+    const agent = await this.agentModel.findById(id).exec();
+    if (image !== '') {
+      if (agent.image.public_id) {
+        const image_id = agent.image.public_id;
+        await v2.uploader.destroy(image_id);
+      }
+      const result = await v2.uploader.upload(image, {
+        folder: `dieundsakeur/agents/${user.name}`,
+      });
 
-  //   // FIND USER
-  //   async findUser(email: string): Promise<User> {
-  //     return this.userModel.findOne({ email }).exec();
-  //   }
-  //   // FORGOT PASSWORD
-  //   async forgotPassword(email: string): Promise<{ message: string }> {
-  //     const user = await this.userModel.findOne({ email }).exec();
-  //     if (user) {
-  //       const resetToken = crypto.randomBytes(20).toString('hex');
-  //       user.resetPasswordToken = crypto
-  //         .createHash('sha256')
-  //         .update(resetToken)
-  //         .digest('hex');
+      agent.image = {
+        public_id: result.public_id,
+        url: result.secure_url,
+        format: result.format,
+        height: result.height,
+        width: result.width,
+      };
+    }
+    if (agent && user._id.toString() === agent.user.toString()) {
+      agent.firstname = firstname || agent.firstname;
+      agent.lastname = lastname || agent.lastname;
+      agent.phone = phone || agent.phone;
+      agent.email = email || agent.email;
+      agent.description = description || agent.description;
+      agent.gender = gender || agent.gender;
+      agent.socials.facebook = facebook || agent.socials.facebook;
+      agent.socials.instagram = instagram || agent.socials.instagram;
+      agent.socials.linkedin = linkedin || agent.socials.linkedin;
+      agent.socials.website = website || agent.socials.website;
 
-  //       user.resetPasswordExpiration = new Date(Date.now() + 10 * 60 * 1000);
+      try {
+        return await agent.save();
+      } catch (error) {
+        throw new InternalServerErrorException(error);
+      }
+    } else {
+      throw new UnauthorizedException('User with that id not found');
+    }
+  }
 
-  //       await user.save({ validateBeforeSave: false });
-  //       try {
-  //         await this.mailService.sendUserConfirmation(user, resetToken);
-  //         return { message: 'Email Sent successfully' };
-  //       } catch (error) {
-  //         throw new InternalServerErrorException(error.message);
-  //       }
-  //     } else {
-  //       throw new UnauthorizedException('User with that email not found');
-  //     }
-  //   }
-  //   // RESET PASSWORD
-  //   async resetPassword(resetToken: string, password: string): Promise<User> {
-  //     const resetPasswordToken = crypto
-  //       .createHash('sha256')
-  //       .update(resetToken)
-  //       .digest('hex');
-  //     const user = await this.userModel
-  //       .findOne({
-  //         resetPasswordToken,
-  //         resetPasswordExpiration: {
-  //           $gt: new Date(),
-  //         },
-  //       })
-  //       .exec();
+  // DELETE AGENT ADMIN
+  async deleteUser(id: string): Promise<Agent> {
+    return await this.agentModel.findByIdAndDelete(id).exec();
+  }
 
-  //     if (user) {
-  //       if (user.resetPasswordExpiration.getTime() > Date.now()) {
-  //         const salt = await bcrypt.genSalt();
-  //         const hashedPassword = await bcrypt.hash(password, salt);
-  //         user.password = hashedPassword;
-  //         user.resetPasswordToken = undefined;
-  //         user.resetPasswordExpiration = undefined;
+  //GET TOP RATED PRODUCTS
+  async getTopRatedAgent(): Promise<Agent[]> {
+    const agent = await this.agentModel.find({}).sort({ rating: -1 }).limit(3);
+    return agent;
+  }
 
-  //         try {
-  //           return await user.save();
-  //         } catch (error) {
-  //           throw new InternalServerErrorException(error);
-  //         }
-  //       } else {
-  //         throw new UnauthorizedException('Reset token has expired');
-  //       }
-  //     } else {
-  //       throw new UnauthorizedException('Invalid reset token');
-  //     }
-  //   }
+  //CREATE REVIEWS
+  async createReviews(
+    createReviewsDto: CreateReviewsDto,
+    id: string,
+    user: any,
+  ): Promise<Agent> {
+    let agent = await this.agentModel.findById(id);
+    const { rating, comment } = createReviewsDto;
 
-  //   // SEND MESSAGE
-  //   async sendMessage(
-  //     messages: string,
-  //     email: string,
-  //     subject: string,
-  //     name: string,
-  //   ): Promise<any> {
-  //     try {
-  //       return await this.mailService.sendMessage(messages, email, subject, name);
-  //     } catch (error) {
-  //       throw new InternalServerErrorException(error);
-  //     }
-  //   }
+    if (agent) {
+      const alreadyReviewed = agent.reviews.find(
+        (r) => r.user.toString() === user._id.toString(),
+      );
+
+      if (alreadyReviewed) {
+        throw new InternalServerErrorException(
+          'Vous avez dèjas donné votre avis sur ce produit !',
+        );
+      }
+
+      agent.reviews.push({
+        user: user._id,
+        name: user.firstname + ' ' + user.lastname,
+        rating: Number(rating),
+        comment: comment,
+      });
+      agent.numbReviews = agent.reviews.length;
+      agent.rating =
+        agent.reviews.reduceRight((acc, item) => item.rating + acc, 0) /
+        agent.reviews.length;
+      try {
+        return await agent.save();
+      } catch (error) {
+        throw new InternalServerErrorException(error.message);
+      }
+    } else {
+      throw new InternalServerErrorException('Agent not found');
+    }
+  }
 }
