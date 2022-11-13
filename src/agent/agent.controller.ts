@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -75,5 +76,16 @@ export class AgentController {
     @GetUser() user: User,
   ): Promise<Agent> {
     return await this.agentService.createAgent(createAgentDto, user);
+  }
+
+  // delete Agent
+  @Delete('/:id')
+  @UseGuards(AuthGuard(), RolesGuard)
+  @Roles(Role.Admin, Role.Agency)
+  async deleteAgent(
+    @Param('id') id: string,
+    @GetUser() user: User,
+  ): Promise<Agent> {
+    return await this.agentService.deleteAgent(id, user);
   }
 }

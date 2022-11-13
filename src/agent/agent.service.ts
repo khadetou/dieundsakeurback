@@ -145,8 +145,18 @@ export class AgentService {
   }
 
   // DELETE AGENT ADMIN
-  async deleteUser(id: string): Promise<Agent> {
-    return await this.agentModel.findByIdAndDelete(id).exec();
+  async deleteAgent(id: string, user: any): Promise<Agent> {
+    const agent = await this.agentModel.findById(id);
+    if (
+      (agent && user._id.toString() === agent.user.toString()) ||
+      user.roles === 'admin'
+    ) {
+      await v2.uploader.destroy(agent.image.public_id);
+
+      return await agent.remove();
+    } else {
+      throw new InternalServerErrorException('Agent not found');
+    }
   }
 
   //GET TOP RATED PRODUCTS
