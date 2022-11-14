@@ -40,7 +40,7 @@ export class AgentController {
 
   // GET AGENT BY ID
   @Get('/:id')
-  async getAgentById(@Param() id: string): Promise<Agent> {
+  async getAgentById(@Param('id') id: string): Promise<Agent> {
     return await this.agentService.getAgentById(id);
   }
 
