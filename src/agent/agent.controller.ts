@@ -62,7 +62,7 @@ export class AgentController {
   async updateAgents(
     @Body() updateAgentsDto: UpdateAgentDto,
     @GetUser() user: User,
-    @Param() id: string,
+    @Param('id') id: string,
   ): Promise<Agent> {
     return await this.agentService.updateAgent(updateAgentsDto, id, user);
   }

@@ -13,20 +13,20 @@ enum Agent {
 
 export class UpdateAgentDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   firstname: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   lastname: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @IsEmail()
   email: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   phone: string;
 
   @IsOptional()
@@ -34,12 +34,12 @@ export class UpdateAgentDto {
   image: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   description: string;
 
   @IsEnum(Agent)
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   gender: string;
 
   @IsOptional()

@@ -105,7 +105,7 @@ export class AgentService {
     } = updateAgentDto;
 
     const agent = await this.agentModel.findById(id).exec();
-    if (image !== '') {
+    if (image) {
       if (agent.image.public_id) {
         const image_id = agent.image.public_id;
         await v2.uploader.destroy(image_id);
@@ -122,6 +122,7 @@ export class AgentService {
         width: result.width,
       };
     }
+
     if (agent && user._id.toString() === agent.user.toString()) {
       agent.firstname = firstname || agent.firstname;
       agent.lastname = lastname || agent.lastname;
@@ -133,7 +134,6 @@ export class AgentService {
       agent.socials.instagram = instagram || agent.socials.instagram;
       agent.socials.linkedin = linkedin || agent.socials.linkedin;
       agent.socials.website = website || agent.socials.website;
-
       try {
         return await agent.save();
       } catch (error) {
