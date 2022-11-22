@@ -23,7 +23,21 @@ export class PropertyService {
   async getProperties(
     getPropertyFilterDto: GetPropertyFilterDto,
   ): Promise<any> {
-    let { pageSize, pageNumber, keyword, location } = getPropertyFilterDto;
+    let {
+      pageSize,
+      pageNumber,
+      keyword,
+      location,
+      type,
+      status,
+      min,
+      max,
+      mina,
+      maxa,
+      bath,
+      beds,
+      rooms,
+    } = getPropertyFilterDto;
 
     pageSize = 8;
     const page = Number(pageNumber) || 1;
@@ -32,15 +46,38 @@ export class PropertyService {
       ? {
           name: { $regex: keyword, $options: 'i' },
         }
-      : (keyword = location
-          ? {
-              category: { $regex: location, $options: 'i' },
-            }
-          : {});
+      : {};
 
+    status = status ? { status: { $regex: status, $options: '^' } } : {};
+    let price =
+      min && max ? { price: { $gte: Number(min), $lte: Number(max) } } : {};
+    let area =
+      mina && maxa ? { area: { $gte: Number(mina), $lte: Number(maxa) } } : {};
+
+    bath = bath
+      ? {
+          baths: { $gte: Number(bath) },
+        }
+      : {};
+    beds = beds
+      ? {
+          beds: { $gte: Number(beds) },
+        }
+      : {};
+    rooms = rooms
+      ? {
+          rooms: { $gte: Number(rooms) },
+        }
+      : {};
+
+    type = type
+      ? {
+          type: { $regex: type, $options: '^' },
+        }
+      : {};
     const count = await this.propertyModel.countDocuments({ ...keyword });
     const properties = await this.propertyModel
-      .find({ ...keyword })
+      .find({ $and: [keyword, price, type, beds, bath, rooms, area] })
       .limit(pageSize)
       .skip(pageSize * (page - 1));
 
